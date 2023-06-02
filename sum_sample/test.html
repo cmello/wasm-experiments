@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sample JavaScript calling C code built in wasm module</title>
+</head>
+<body>
+
+  <p>
+    Parameter 1:
+    <input id="p1_input" type="text"/>
+  </p>
+  <p>
+    Parameter 2:
+    <input id="p2_input" type="text"/>
+  </p>
+
+	<button onclick="callSum()">Call sum()</button>
+
+	<p id="result_label"></p>
+
+	<script>
+		function callSum() {
+      var parameter1 = parseInt(document.getElementById("p1_input").value);
+      var parameter2 = parseInt(document.getElementById("p2_input").value);
+
+      (async() => {
+        const response = await fetch('sample.wasm');
+        const bytes = await response.arrayBuffer();
+        const { instance } = await WebAssembly.instantiate(bytes);
+
+        console.log('The answer is: ' + instance.exports.sum(1, 2));
+        document.getElementById("result_label").innerHTML = "Result: " + instance.exports.sum(parameter1, parameter2);
+    })();
+		}
+	</script>
+
+  <script type="module">
+  </script>
+  </body>
+</html>
