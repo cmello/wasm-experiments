@@ -17,4 +17,4 @@ python3 -m http.server
 ```
 
 
-Link to compiled sample: [click here](sum_sample/test.html)
+Link to sample: [click here](sum_sample/)
