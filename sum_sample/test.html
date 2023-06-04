@@ -25,14 +25,12 @@
       var parameter1 = parseInt(document.getElementById("p1_input").value);
       var parameter2 = parseInt(document.getElementById("p2_input").value);
 
-      (async () => {
-        const response = await fetch('sample.wasm');
-        const bytes = await response.arrayBuffer();
-        const { instance } = await WebAssembly.instantiate(bytes);
-
-        console.log('The answer is: ' + instance.exports.sum(1, 2));
-        document.getElementById("result_label").innerHTML = "Result: " + instance.exports.sum(parameter1, parameter2);
-      })();
+      // sample from https://developer.mozilla.org/en-US/docs/WebAssembly/Understanding_the_text_format
+      WebAssembly.instantiateStreaming(fetch("sample.wasm")).then((obj) =>
+      {
+        var result = obj.instance.exports.sum(parameter1, parameter2);
+        document.getElementById("result_label").innerHTML = "Result: " + result;
+      });
     }
   </script>
 
