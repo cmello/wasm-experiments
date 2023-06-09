@@ -21,13 +21,31 @@
   <p id="result_label"></p>
 
   <script>
+
+    const importObject = {
+        my_module: { my_function: consoleLogString }//,
+        //js: { mem: memory },
+    };
+
+    console.log("initialized");
+    cpp_memory = null;
+
+    function consoleLogString(address)
+    {
+      console.log("todo. address=" + address);
+      const bytes = new Uint8Array(cpp_memory.buffer, address, 4);
+      const string = new TextDecoder("utf8").decode(bytes);
+      console.log(string);
+    }
+
     function callSum() {
       var parameter1 = parseInt(document.getElementById("p1_input").value);
       var parameter2 = parseInt(document.getElementById("p2_input").value);
 
       // sample from https://developer.mozilla.org/en-US/docs/WebAssembly/Understanding_the_text_format
-      WebAssembly.instantiateStreaming(fetch("sample.wasm")).then((obj) =>
+      WebAssembly.instantiateStreaming(fetch("sample.wasm"), importObject).then((obj) =>
       {
+        cpp_memory = obj.instance.exports.memory;
         var result = obj.instance.exports.sum(parameter1, parameter2);
         document.getElementById("result_label").innerHTML = "Result: " + result;
       });
